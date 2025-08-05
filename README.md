@@ -1,8 +1,8 @@
-# 🧬 Otimizador de Doações de Sangue e Órgãos por Compatibilidade Rápida
+# 🧬 Otimizador de Doações de Sangue por Compatibilidade Rápida
 
 ## 🧩 Problema para Resolver (Inovação)
 
-No Brasil e em muitos países, **pacientes em filas de doação de sangue ou órgãos enfrentam longas esperas**, muitas vezes por falta de um sistema eficiente de triagem e cruzamento de dados. O **GeneMatch** surge como uma solução inovadora para:
+No Brasil e em muitos países, **pacientes em filas de doação de sangue enfrentam longas esperas**, muitas vezes por falta de um sistema eficiente de triagem e cruzamento de dados. Sendo assim, o **Otimizador de doações de sangue** surge como uma solução inovadora para:
 
 - Otimizar a compatibilidade entre doadores e receptores
 - Reduzir o tempo de espera em situações críticas
@@ -11,7 +11,7 @@ No Brasil e em muitos países, **pacientes em filas de doação de sangue ou ór
 
 ---
 
-## ❗ Por que ele é relevante?
+## ❗ Qual a sua relevância?
 
 - Milhares de vidas são perdidas por atrasos na compatibilidade de doações.
 - Hospitais nem sempre têm sistemas inteligentes de ordenação.
