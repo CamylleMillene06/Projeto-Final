@@ -1,0 +1,165 @@
+# Otimizador de Doações de Sangue e Órgãos por Compatibilidade Rápida
+
+from queue import PriorityQueue
+
+# ------------------------------
+# ESTRUTURAS DE DADOS PRINCIPAIS
+# ------------------------------
+
+# Tabela hash: mapeia tipo sanguíneo → lista de doadores
+hash_dadores = {
+    "A+": [], "A-": [], "B+": [], "B-": [],
+    "AB+": [], "AB-": [], "O+": [], "O-": []
+}
+
+# Lista de pacientes aguardando
+lista_pacientes = []
+
+# Fila de prioridade: pacientes por urgência (quanto menor o número, maior a prioridade)
+fila_urgencia = PriorityQueue()
+
+# Pilha: histórico de doadores removidos ou indisponíveis
+pilha_cancelamentos = []
+
+# ------------------------------
+# FUNÇÕES DE SUPORTE
+# ------------------------------
+
+def pode_doar(doador, receptor):
+    # Compatibilidade sanguínea simplificada (sangue apenas)
+    mapa = {
+        "O-": ["O-", "O+", "A-", "A+", "B-", "B+", "AB-", "AB+"],
+        "O+": ["O+", "A+", "B+", "AB+"],
+        "A-": ["A-", "A+", "AB-", "AB+"],
+        "A+": ["A+", "AB+"],
+        "B-": ["B-", "B+", "AB-", "AB+"],
+        "B+": ["B+", "AB+"],
+        "AB-": ["AB-", "AB+"],
+        "AB+": ["AB+"]
+    }
+    return receptor in mapa.get(doador, [])
+
+def registrar_doador(nome, tipo_sangue):
+    if tipo_sangue in hash_dadores:
+        hash_dadores[tipo_sangue].append(nome)
+        print(f"✅ Doador {nome} (tipo {tipo_sangue}) registrado com sucesso!")
+    else:
+        print("❌ Tipo sanguíneo inválido.")
+
+def registrar_paciente(nome, tipo_sangue, urgencia):
+    paciente = {
+        "nome": nome,
+        "tipo_sangue": tipo_sangue,
+        "urgencia": urgencia
+    }
+    lista_pacientes.append(paciente)
+    fila_urgencia.put((urgencia, paciente))
+    print(f"🆘 Paciente {nome} registrado na fila com prioridade {urgencia}.")
+
+def listar_dadores():
+    print("\n🩸 Lista de doadores por tipo sanguíneo:")
+    for tipo, nomes in hash_dadores.items():
+        print(f" - {tipo}: {', '.join(nomes) if nomes else 'Nenhum doador'}")
+
+def listar_pacientes():
+    print("\n🏥 Pacientes aguardando doação:")
+    for paciente in lista_pacientes:
+        print(f" - {paciente['nome']} ({paciente['tipo_sangue']}) - prioridade {paciente['urgencia']}")
+
+def processar_doacoes():
+    print("\n🚨 Iniciando processamento de doações...")
+    if fila_urgencia.empty():
+        print("📭 Nenhum paciente na fila.")
+        return
+
+    estoque_vazio = True
+
+    while not fila_urgencia.empty():
+        urgencia, paciente = fila_urgencia.get()
+        tipo_receptor = paciente['tipo_sangue']
+        nome_receptor = paciente['nome']
+        doador_encontrado = False
+
+        for tipo_doador, lista in hash_dadores.items():
+            if pode_doar(tipo_doador, tipo_receptor) and lista:
+                nome_doador = lista.pop(0)  # remove o primeiro disponível
+                print(f"❤️ {nome_doador} (tipo {tipo_doador}) → {nome_receptor} (tipo {tipo_receptor})")
+                print(f"📢 Aviso: Paciente {nome_receptor} recebeu uma doação de {nome_doador}.")
+                doador_encontrado = True
+                estoque_vazio = False
+                break
+
+        if not doador_encontrado:
+            print(f"❌ Nenhum doador compatível encontrado para {nome_receptor} ({tipo_receptor})")
+
+    if estoque_vazio:
+        print("🚨 Alerta: Nenhum doador disponível no estoque para atender os pacientes.")
+
+def desfazer_cancelamento():
+    if not pilha_cancelamentos:
+        print("❌ Nenhum cancelamento a desfazer.")
+        return
+
+    tipo, nome = pilha_cancelamentos.pop()
+    hash_dadores[tipo].insert(0, nome)
+    print(f"↩️ Doador {nome} (tipo {tipo}) restaurado.")
+
+def cancelar_doador(nome):
+    for tipo, lista in hash_dadores.items():
+        if nome in lista:
+            lista.remove(nome)
+            pilha_cancelamentos.append((tipo, nome))
+            print(f"❌ Doador {nome} removido da lista (cancelado).")
+            return
+    print("⚠️ Doador não encontrado.")
+
+# ------------------------------
+# MENU PRINCIPAL
+# ------------------------------
+
+def menu():
+    while True:
+        print("\n===== DOAÇÕES =====")
+        print("1. Registrar doador")
+        print("2. Registrar paciente")
+        print("3. Listar doadores")
+        print("4. Listar pacientes")
+        print("5. Processar doações")
+        print("6. Cancelar doador")
+        print("7. Desfazer cancelamento")
+        print("8. Sair")
+
+        opcao = input("Escolha uma opção: ").strip()
+
+        if opcao == "1":
+            nome = input("Nome do doador: ")
+            tipo = input("Tipo sanguíneo: ").upper()
+            registrar_doador(nome, tipo)
+        elif opcao == "2":
+            nome = input("Nome do paciente: ")
+            tipo = input("Tipo sanguíneo: ").upper()
+            try:
+                urgencia = int(input("Nível de urgência (1-5): "))
+            except ValueError:
+                print("❌ Urgência inválida.")
+                continue
+            registrar_paciente(nome, tipo, urgencia)
+        elif opcao == "3":
+            listar_dadores()
+        elif opcao == "4":
+            listar_pacientes()
+        elif opcao == "5":
+            processar_doacoes()
+        elif opcao == "6":
+            nome = input("Nome do doador a cancelar: ")
+            cancelar_doador(nome)
+        elif opcao == "7":
+            desfazer_cancelamento()
+        elif opcao == "8":
+            print("👋 Encerrando otimizador de doações.")
+            break
+        else:
+            print("❌ Opção inválida. Tente novamente.")
+
+if __name__ == "__main__":
+    menu()
