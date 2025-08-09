@@ -2,7 +2,7 @@
 
 ## 🧩 Problema para Resolver (Inovação)
 
-No Brasil e em muitos países, **pacientes em filas de doação de sangue enfrentam longas esperas**, muitas vezes por falta de um sistema eficiente de triagem e cruzamento de dados. Sendo assim, o **Otimizador de doação de sangue** surge como uma solução inovadora para:
+No Brasil e em muitos países, **pacientes em filas de doação de sangue enfrentam longas esperas**, muitas vezes por falta de um sistema eficiente de triagem e cruzamento de dados. Sendo assim, o **Otimizador de doações de sangue** surge como uma solução inovadora para:
 
 - Otimizar a compatibilidade entre doadores e receptores
 - Reduzir o tempo de espera em situações críticas
