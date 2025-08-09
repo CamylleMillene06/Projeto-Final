@@ -1,4 +1,4 @@
-# 🧬 Otimizador de Doações de Sangue por Compatibilidade Rápida
+# Otimizador de Doações de Sangue por Compatibilidade Rápida 🧬
 
 ## 🧩 Problema para Resolver (Inovação)
 
